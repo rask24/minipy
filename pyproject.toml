@@ -7,6 +7,7 @@ name = "minipy"
 version = "0.1.0"
 description = "A minimal numpy-like library with CUDA support"
 requires-python = ">=3.12"
+authors = [{name = "rask24", email = "rask0x18@gmail.com"}]
 
 [tool.black]
 line-length = 90
