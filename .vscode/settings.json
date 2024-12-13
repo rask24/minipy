@@ -1,0 +1,27 @@
+{
+  "[cpp]": {
+    "editor.defaultFormatter": "ms-vscode.cpptools",
+    "editor.formatOnSave": true,
+    "editor.rulers": [90],
+    "editor.wordBasedSuggestions": "allDocuments",
+    "editor.suggest.insertMode": "replace",
+    "editor.semanticHighlighting.enabled": true,
+    "files.insertFinalNewline": true,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2
+  },
+  "C_Cpp.default.cppStandard": "c++17",
+  "C_Cpp.clang_format_style": "{ BasedOnStyle: Google }",
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "always"
+    },
+    "editor.rulers": [90]
+  },
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.typeCheckingMode": "basic",
+  "isort.args": ["--settings-file", "tests/e2e/pyproject.toml"],
+  "flake8.args": ["--config=tests/e2e/.flake8"]
+}
