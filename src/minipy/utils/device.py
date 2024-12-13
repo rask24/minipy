@@ -9,5 +9,7 @@ def cuda_is_available():
 
 def get_device(device="auto"):
     if device == "auto":
-        return "cuda" if cuda_is_available() else "cpu"
+        return "cpu"
+    if device in ["cpu", "cuda"]:
+        raise ValueError(f"Unsupported device: {device}")
     return device
