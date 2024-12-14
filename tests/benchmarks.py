@@ -18,7 +18,7 @@ def benchmark_minipy_add(data1, data2):
 
 
 def run_benchmarks():
-    sizes = [100, 1000, 10000, 100000]
+    sizes = [4000]
 
     print("Benchmarking list addition operations")
     print("Size | Python (ms) | MiniPy (ms) | Speedup")
