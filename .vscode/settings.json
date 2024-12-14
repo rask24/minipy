@@ -24,5 +24,11 @@
   "python.analysis.autoImportCompletions": true,
   "python.analysis.typeCheckingMode": "basic",
   "isort.args": ["--settings-file", "tests/e2e/pyproject.toml"],
-  "flake8.args": ["--config=tests/e2e/.flake8"]
+  "flake8.args": [
+    "--config=tests/e2e/.flake8"
+  ],
+  "files.associations": {
+    "*.css": "css",
+    "stdexcept": "cpp"
+  }
 }

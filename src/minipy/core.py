@@ -1,4 +1,5 @@
 from minipy.utils import get_device
+from minipy.backend import array_ops
 
 
 class MiniArray:
@@ -19,4 +20,5 @@ class MiniArray:
             raise TypeError("Unsupported operand type")
         if self.shape != other.shape:
             raise ValueError("Arrays must have the same shape")
-        return MiniArray([a + b for a, b in zip(self._data, other._data)])
+        result = array_ops.add(self._data, other._data)
+        return MiniArray(result, device=self.device)
