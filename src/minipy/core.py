@@ -1,31 +1,22 @@
-import numpy as np
 from minipy.utils import get_device
 
 
 class MiniArray:
     def __init__(self, data, device="auto"):
         self.device = get_device(device)
-        self._data = np.asarray(data)
-        self.shape = self._data.shape
-        self.dtype = self._data.dtype
+        self._data = self._validate_data(data)
+        self.shape = (len(self._data),)
 
-    def __repr__(self):
-        return f"MiniArray({self._data!r}, device={self.device!r})"
-
-    @staticmethod
-    def _get_device(device):
-        if device == "auto":
-            return "cpu"
-        if device not in ["cpu", "cuda"]:
-            raise ValueError(f"Unsupported device: {device}")
-        return device
+    def _validate_data(self, data):
+        if not isinstance(data, (list, tuple)):
+            raise TypeError("Data must be a list or tuple")
+        if not all(isinstance(x, (int, float)) for x in data):
+            raise ValueError("All elements must be numbers")
+        return list(data)
 
     def __add__(self, other):
-        if isinstance(other, MiniArray):
-            return MiniArray(self._data + other._data, device=self.device)
-        return MiniArray(self._data + other, device=self.device)
-
-    def __mul__(self, other):
-        if isinstance(other, MiniArray):
-            return MiniArray(self._data * other._data, device=self.device)
-        return MiniArray(self._data * other, device=self.device)
+        if not isinstance(other, MiniArray):
+            raise TypeError("Unsupported operand type")
+        if self.shape != other.shape:
+            raise ValueError("Arrays must have the same shape")
+        return MiniArray([a + b for a, b in zip(self._data, other._data)])
