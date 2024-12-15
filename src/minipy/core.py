@@ -13,12 +13,22 @@ class MiniArray:
             raise TypeError("Data must be a list or tuple")
         if not all(isinstance(x, (int, float)) for x in data):
             raise ValueError("All elements must be numbers")
-        return list(data)
+        return list(map(float, data))
 
     def __add__(self, other):
         if not isinstance(other, MiniArray):
             raise TypeError("Unsupported operand type")
         if self.shape != other.shape:
             raise ValueError("Arrays must have the same shape")
-        result = array_ops.add(self._data, other._data)
+
+        if self.device == "cuda":
+            result = array_ops.add_gpu(self._data, other._data)
+        else:
+            result = array_ops.add_cpu(self._data, other._data)
+
         return MiniArray(result, device=self.device)
+
+    def to(self, device):
+        if device not in ["cpu", "cuda"]:
+            raise ValueError("Invalid device")
+        return MiniArray(self._data, device=device)
