@@ -26,7 +26,7 @@ size_t ArrayOps::determine_thread_count(size_t data_size) {
   return std::max(size_t(1), optimal_threads);
 }
 
-std::vector<double> ArrayOps::add(const std::vector<double>& a,
+std::vector<double> ArrayOps::add_cpu(const std::vector<double>& a,
                                   const std::vector<double>& b) {
   if (a.size() != b.size()) {
     throw std::invalid_argument("Arrays must have the same size");

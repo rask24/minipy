@@ -8,7 +8,7 @@
 namespace minipy {
 class ArrayOps {
  public:
-  static std::vector<double> add(const std::vector<double>& a,
+  static std::vector<double> add_cpu(const std::vector<double>& a,
                                  const std::vector<double>& b);
 
  private:

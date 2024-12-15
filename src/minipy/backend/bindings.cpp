@@ -7,5 +7,5 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(array_ops, m) {
   m.doc() = "MiniPy array operations";
-  m.def("add", &minipy::ArrayOps::add, "Add two arrays");
+  m.def("add", &minipy::ArrayOps::add_cpu, "Add two arrays");
 }
