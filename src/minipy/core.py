@@ -1,21 +1,22 @@
+from typing import List
 from minipy.utils import get_device
 from minipy.backend import array_ops
 
 
 class MiniArray:
-    def __init__(self, data, device="auto"):
+    def __init__(self, data: List[float], device: str = "auto"):
         self.device = get_device(device)
         self._data = self._validate_data(data)
         self.shape = (len(self._data),)
 
-    def _validate_data(self, data):
+    def _validate_data(self, data: List[float]) -> List[float]:
         if not isinstance(data, (list, tuple)):
             raise TypeError("Data must be a list or tuple")
         if not all(isinstance(x, (int, float)) for x in data):
             raise ValueError("All elements must be numbers")
         return list(map(float, data))
 
-    def __add__(self, other):
+    def __add__(self, other: "MiniArray") -> "MiniArray":
         if not isinstance(other, MiniArray):
             raise TypeError("Unsupported operand type")
         if self.shape != other.shape:
@@ -28,7 +29,7 @@ class MiniArray:
 
         return MiniArray(result, device=self.device)
 
-    def to(self, device):
+    def to(self, device: str) -> "MiniArray":
         if device not in ["cpu", "gpu"]:
             raise ValueError("Invalid device")
         return MiniArray(self._data, device=device)
