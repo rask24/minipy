@@ -67,3 +67,41 @@ def test_add_validation():
 
     with pytest.raises(TypeError):
         _ = a + [1.0, 2.0, 3.0]
+
+
+def test_cpu_dot():
+    a = MiniArray([1.0, 2.0, 3.0], device="cpu")
+    b = MiniArray([4.0, 5.0, 6.0], device="cpu")
+    c = a.dot(b)
+    assert c.device == "cpu"
+    assert c._data == [32.0]  # 1*4 + 2*5 + 3*6 = 32
+
+
+def test_gpu_dot():
+    a = MiniArray([1.0, 2.0, 3.0], device="gpu")
+    b = MiniArray([4.0, 5.0, 6.0], device="gpu")
+    c = a.dot(b)
+    assert c.device == "gpu"
+    assert c._data == [32.0]
+
+
+def test_dot_validation():
+    a = MiniArray([1.0, 2.0, 3.0])
+    b = MiniArray([1.0, 2.0])
+
+    with pytest.raises(ValueError):
+        _ = a.dot(b)
+
+    with pytest.raises(TypeError):
+        _ = a.dot([1.0, 2.0, 3.0])
+
+
+def test_dot_device_transfer():
+    a = MiniArray([1.0, 2.0, 3.0], device="cpu")
+    b = MiniArray([4.0, 5.0, 6.0], device="gpu")
+
+    # Transfer to same device before operation
+    a_gpu = a.to("gpu")
+    c = a_gpu.dot(b)
+    assert c.device == "gpu"
+    assert c._data == [32.0]
