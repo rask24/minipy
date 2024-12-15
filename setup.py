@@ -32,6 +32,8 @@ class CustomBuildExt(build_ext):
                     "-O2",
                     "-Xcompiler",
                     "-fPIC",
+                    "--ptxas-options=-v",
+                    "-arch=sm_80",
                 ]
                 for include_dir in cuda_ext.include_dirs:
                     nvcc_cmd.extend(["-I", include_dir])
