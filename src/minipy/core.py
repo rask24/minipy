@@ -21,7 +21,7 @@ class MiniArray:
         if self.shape != other.shape:
             raise ValueError("Arrays must have the same shape")
 
-        if self.device == "cuda":
+        if self.device == "gpu":
             result = array_ops.add_gpu(self._data, other._data)
         else:
             result = array_ops.add_cpu(self._data, other._data)
@@ -29,6 +29,6 @@ class MiniArray:
         return MiniArray(result, device=self.device)
 
     def to(self, device):
-        if device not in ["cpu", "cuda"]:
+        if device not in ["cpu", "gpu"]:
             raise ValueError("Invalid device")
         return MiniArray(self._data, device=device)
