@@ -27,7 +27,7 @@ size_t ArrayOps::determine_thread_count(size_t data_size) {
 }
 
 std::vector<double> ArrayOps::add_cpu(const std::vector<double>& a,
-                                  const std::vector<double>& b) {
+                                      const std::vector<double>& b) {
   if (a.size() != b.size()) {
     throw std::invalid_argument("Arrays must have the same size");
   }
@@ -52,5 +52,48 @@ std::vector<double> ArrayOps::add_cpu(const std::vector<double>& a,
   }
 
   return result;
+}
+
+void ArrayOps::dot_range(const std::vector<double>& a,
+                         const std::vector<double>& b, double& result,
+                         size_t start, size_t end) {
+  double local_sum = 0.0;
+  for (size_t i = start; i < end; ++i) {
+    local_sum += a[i] * b[i];
+  }
+  result += local_sum;
+}
+
+std::vector<double> ArrayOps::dot_cpu(const std::vector<double>& a,
+                                      const std::vector<double>& b) {
+  if (a.size() != b.size()) {
+    throw std::invalid_argument("Arrays must have the same size");
+  }
+
+  size_t num_threads = determine_thread_count(a.size());
+  size_t chunk_size = a.size() / num_threads;
+  std::vector<std::thread> threads;
+  std::vector<double> partial_results(num_threads, 0.0);
+
+  for (size_t i = 0; i < num_threads - 1; ++i) {
+    size_t start = i * chunk_size;
+    size_t end = (i + 1) * chunk_size;
+    threads.emplace_back(dot_range, std::ref(a), std::ref(b),
+                         std::ref(partial_results[i]), start, end);
+  }
+
+  dot_range(a, b, partial_results[num_threads - 1],
+            (num_threads - 1) * chunk_size, a.size());
+
+  for (auto& thread : threads) {
+    thread.join();
+  }
+
+  double final_result = 0.0;
+  for (const auto& partial : partial_results) {
+    final_result += partial;
+  }
+
+  return std::vector<double>{final_result};
 }
 }  // namespace minipy

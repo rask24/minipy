@@ -16,6 +16,11 @@ class MiniArray:
             raise ValueError("All elements must be numbers")
         return list(map(float, data))
 
+    def to(self, device: str) -> "MiniArray":
+        if device not in ["cpu", "gpu"]:
+            raise ValueError("Invalid device")
+        return MiniArray(self._data, device=device)
+
     def __add__(self, other: "MiniArray") -> "MiniArray":
         if not isinstance(other, MiniArray):
             raise TypeError("Unsupported operand type")
@@ -29,7 +34,14 @@ class MiniArray:
 
         return MiniArray(result, device=self.device)
 
-    def to(self, device: str) -> "MiniArray":
-        if device not in ["cpu", "gpu"]:
-            raise ValueError("Invalid device")
-        return MiniArray(self._data, device=device)
+    def dot(self, other: "MiniArray") -> "MiniArray":
+        if not isinstance(other, MiniArray):
+            raise TypeError("Unsupported operand type")
+        if self.shape != other.shape:
+            raise ValueError("Arrays must have the same shape")
+
+        if self.device == "gpu":
+            result = array_ops.dot_gpu(self._data, other._data)
+        else:
+            result = array_ops.dot_cpu(self._data, other._data)
+        return MiniArray(result, device=self.device)
